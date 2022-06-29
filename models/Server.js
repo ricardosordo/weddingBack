@@ -1,28 +1,38 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
+const { dbConnection } = require('../dataBase/config');
 
-class server {
+class Server {
 
     constructor(){
         this.app = express();
         this.port = process.env.PORT;
+        this.usuariosPath = '/api/invited'
+
+        //DataBase connection
+        this.connectDB();
+
+        //middlewares
         this.middlewares();
         // App routes
         this.routes();
 
     }
 
+    async connectDB(){
+        await dbConnection()
+    }
+
     middlewares(){
+        //Cors
         this.app.use( cors() );
+
+        //read and parsing
+        this.app.use( express.json() );
     }
     
     routes(){     // respond with "hello world" when a GET request is made to the homepage
-    this.app.get('/api', (req, res) => {
-        res.json({
-            ok:true,
-            msg: 'get sucess'
-            });
-        });
+        this.app.use(this.usuariosPath, require('../routes/invited'))
     }
 
     listen (){     // respond with "hello world" when a GET request is made to the homepage
@@ -33,4 +43,4 @@ class server {
 
 }
 
-module.exports = server
+module.exports = Server
