@@ -27,6 +27,9 @@ class Server {
         //Cors
         this.app.use( cors() );
 
+        //403 page
+        this.app.use(express.static('public'))
+
         //read and parsing
         this.app.use( express.json() );
     }
